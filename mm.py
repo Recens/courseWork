@@ -1,6 +1,6 @@
 import pygame as pg
 from copy import deepcopy
-from random import choice
+from random import choice, randrange
 W, H = 10, 20
 BLOCK = 50
 game_res = W * BLOCK, H * BLOCK
@@ -10,6 +10,8 @@ screen = pg.display.set_mode(game_res)
 grid = [pg.Rect(x * BLOCK, y * BLOCK, BLOCK, BLOCK) for x in range(W) for y in range(H)]
 pg.init()
 clock = pg.time.Clock()
+colors = lambda: (randrange(0, 255), randrange(0, 255), randrange(0, 255))
+color, next_color = colors(), colors()
 figure_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
               [(0, 0), (-1, 0), (1, 0), (0, -1)],
               [(0, 0), (1, -1), (0, -1), (0, 1)],
@@ -22,7 +24,7 @@ grid = [pg.Rect(x * BLOCK, y * BLOCK, BLOCK, BLOCK) for x in range(W) for y in r
 
 figures = [[pg.Rect(x + W // 2, y + 1, 1, 1) for x, y in pos] for pos in figure_pos]
 figure_rect = pg.Rect(1, 1, BLOCK - 2, BLOCK - 2)
-figure = deepcopy(choice(figures))
+figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
 fall_count, fall_speed, fall_limit = 0, 60, 200
 
 flor = [[0 for i in range(W)]for j in range(H)]
@@ -93,8 +95,11 @@ while True:
             figure[i].y += 1
             if not check():
                 for i in range(4):
-                    flor[figure_old[i].y][figure_old[i].x] = pg.Color('White')
-                figure = deepcopy(choice(figures))
+                    flor[figure_old[i].y][figure_old[i].x] = color
+                color = next_color
+                figure = next_figure
+                next_figure = deepcopy(choice(figures))
+                next_color = colors()
                 fall_limit = 2000
                 break
 
@@ -105,7 +110,7 @@ while True:
     for i in range(4):
         figure_rect.x = figure[i].x * BLOCK
         figure_rect.y = figure[i].y * BLOCK
-        pg.draw.rect(screen, pg.Color('white'), figure_rect)
+        pg.draw.rect(screen, color, figure_rect)
     # draw flor
     for y, row in enumerate(flor):
         for x, col in enumerate(row):

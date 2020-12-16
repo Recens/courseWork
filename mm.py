@@ -27,6 +27,7 @@ fall_count, fall_speed, fall_limit = 0, 60, 200
 
 flor = [[0 for i in range(W)]for j in range(H)]
 
+
 def check():
     if figure[i].x < 0 or figure[i].x > W-1:
         return False
@@ -37,6 +38,7 @@ def check():
 
 while True:
     yx = 0
+    print(yx)
     rotate = False
     screen.fill(pg.Color('black'))
     for event in pg.event.get():

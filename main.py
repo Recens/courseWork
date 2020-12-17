@@ -27,7 +27,7 @@ class Block:
     score = 0
     lines = 0
     scores = {0: 0, 1: 10, 2: 30, 3: 60, 4: 100}
-    title_score = font.render("score:", True, pg.Color("blue"))
+    title_score = font.render("Score:", True, pg.Color("blue"))
     title_record = font.render("Record:", True, pg.Color("green"))
 
     grid = [pg.Rect(x * BLOCK, y * BLOCK, BLOCK, BLOCK) for x in range(W) for y in range(H)]
@@ -56,7 +56,7 @@ class Move(Block):
         self.manager = Manager()
         self.x = 0
         self.fall_count = 0
-        self.fall_speed = 60
+        self.fall_speed = 40
         self.fall_limit = 200
         self.rotate = False
         self.record = 0
@@ -86,7 +86,7 @@ class Move(Block):
             if count < W:
                 line -= 1
             else:
-                self.fall_speed += 2
+                self.fall_speed += 1
                 Block.lines += 1
 
     def score(self):

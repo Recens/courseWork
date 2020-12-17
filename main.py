@@ -35,13 +35,13 @@ class Parameter:
     color, next_color = colors(), colors()
 
 
-class Manager:
+class Collision:
 
     def __init__(self):
         self.parameter = Parameter()
         self.flor = [[0 for i in range(W)] for j in range(H)]
 
-    def check(self, i):
+    def collision(self, i):
 
         if self.parameter.figure[i].x < 0 or self.parameter.figure[i].x > W - 1:
             return False
@@ -53,7 +53,7 @@ class Manager:
 class Function(Parameter):
 
     def __init__(self):
-        self.manager = Manager()
+        self.collision = Collision()
         self.x = 0
         self.fall_count = 0
         self.fall_speed = 40
@@ -70,7 +70,7 @@ class Function(Parameter):
                 y = Parameter.figure[i].x - center.x
                 Parameter.figure[i].x = center.x - x
                 Parameter.figure[i].y = center.y + y
-                if not self.manager.check(i):
+                if not self.collision.collision(i):
                     Parameter.figure = deepcopy(figure_old)
                     break
 
@@ -80,9 +80,9 @@ class Function(Parameter):
         for row in range(H - 1, - 1, - 1):
             count = 0
             for i in range(W):
-                if self.manager.flor[row][i]:
+                if self.collision.flor[row][i]:
                     count += 1
-                self.manager.flor[line][i] = self.manager.flor[row][i]
+                self.collision.flor[line][i] = self.collision.flor[row][i]
             if count < W:
                 line -= 1
             else:
@@ -96,7 +96,7 @@ class Function(Parameter):
         figure_old = deepcopy(Parameter.figure)
         for i in range(4):
             Parameter.figure[i].x += self.x
-            if not self.manager.check(i):
+            if not self.collision.collision(i):
                 Parameter.figure = deepcopy(figure_old)
                 break
 
@@ -107,9 +107,9 @@ class Function(Parameter):
             figure_old = deepcopy(Parameter.figure)
             for i in range(4):
                 Parameter.figure[i].y += 1
-                if not self.manager.check(i):
+                if not self.collision.collision(i):
                     for i in range(4):
-                        self.manager.flor[figure_old[i].y][figure_old[i].x] = Parameter.color
+                        self.collision.flor[figure_old[i].y][figure_old[i].x] = Parameter.color
                     Parameter.color = Parameter.next_color
                     Parameter.figure = Parameter.next_figure
                     Parameter.next_figure = deepcopy(choice(Parameter.figures))
@@ -118,7 +118,7 @@ class Function(Parameter):
                     break
 
     def flor(self):
-        for y, row in enumerate(self.manager.flor):
+        for y, row in enumerate(self.collision.flor):
             for x, col in enumerate(row):
                 if col:
                     Parameter.figure_rect.x = x * BLOCK
@@ -141,9 +141,9 @@ class Function(Parameter):
     def game_over(self):
 
         for i in range(W):
-            if self.manager.flor[0][i]:
+            if self.collision.flor[0][i]:
                 self.set_record()
-                self.manager.flor = [[0 for i in range(W)] for i in range(H)]
+                self.collision.flor = [[0 for i in range(W)] for i in range(H)]
                 self.anim_count, self.anim_speed, self.anim_limit = 0, 60, 2000
                 Parameter.score = 0
 
@@ -152,7 +152,7 @@ class Draw:
     def __init__(self):
         self.func = Function()
         self.parameter = Parameter()
-        self.manager = Manager()
+        self.collision = Collision()
 
     def draw_figure(self):
         for i in range(4):
@@ -183,7 +183,7 @@ class GameWindow:
     def __init__(self):
         self.block = Parameter()
         self.func = Function()
-        self.manager = Manager()
+        self.collision = Collision()
         self.draw = Draw()
 
     def mainLoop(self):

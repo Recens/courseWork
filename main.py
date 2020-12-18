@@ -157,7 +157,7 @@ class Draw:
     def __init__(self):
         self.func = Function()
         self.parameter = Parameter()
-        self.collision = Collision()
+
 
     def draw_figure(self):
         # Цикл отрисовки фигур
@@ -188,9 +188,7 @@ class Draw:
 class GameWindow:
 
     def __init__(self):
-        self.block = Parameter()
         self.func = Function()
-        self.collision = Collision()
         self.draw = Draw()
 
     def mainLoop(self):

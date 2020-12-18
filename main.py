@@ -117,11 +117,11 @@ class Function(Parameter):
                     Parameter.figure = Parameter.next_figure
                     Parameter.next_figure = deepcopy(choice(Parameter.figures))
                     Parameter.next_color = Parameter.colors()
-                    self.fall_limit = 2000
+                    self.fall_limit = 1500
                     break
 
     def flor(self):
-        for y, row in enumerate(self.collision.flor):
+        for y, row in enumerate(self.collision.flor): # перебор листа по индексу элемента и самого элемента
             for x, col in enumerate(row):
                 if col:
                     Parameter.figure_rect.x = x * BLOCK

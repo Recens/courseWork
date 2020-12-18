@@ -15,23 +15,24 @@ title_record = font.render("Record:", True, pg.Color("green"))
 
 
 class Parameter:
-
-    figure_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
-                  [(0, 0), (-1, 0), (1, 0), (0, -1)],
-                  [(0, 0), (1, -1), (0, -1), (0, 1)],
-                  [(0, 0), (-1, -1), (0, -1), (0, 1)],
-                  [(0, 0), (-1, 0), (1, -1), (0, -1)],
-                  [(0, 0), (1, -1), (0, -1), (1, 0)],
+    #кординаты фигур на игровом поле:
+    figure_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)], [(0, 0), (-1, 0), (1, 0), (0, -1)], [(0, 0), (1, -1), (0, -1), (0, 1)],
+                  [(0, 0), (-1, -1), (0, -1), (0, 1)], [(0, 0), (-1, 0), (1, -1), (0, -1)], [(0, 0), (1, -1), (0, -1), (1, 0)],
                   [(0, 0), (1, 0), (0, -1), (-1, -1)]]
+    #сложная конструкция генератора масива списка фигур экземпляра Rect:
     figures = [[pg.Rect(x + W // 2, y + 1, 1, 1) for x, y in pos] for pos in figure_pos]
+    #Ещё один экземпляр для отрисовки каждой части фигуры
     figure_rect = pg.Rect(1, 1, BLOCK - 2, BLOCK - 2)
+    # переменые хранящие текущую и следущею фигуру
     figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
     score = 0
     lines = 0
     scores = {0: 0, 1: 10, 2: 30, 3: 60, 4: 100}
-
+    #сложная конструкция генератора списка сетки(блоков):
     grid = [pg.Rect(x * BLOCK, y * BLOCK, BLOCK, BLOCK) for x in range(W) for y in range(H)]
+    #Выбор рандомного цвета в системе RGB с помощью lambda
     colors = lambda: (randrange(200, 255), randrange(200, 255), randrange(200, 255))
+    #Цвет для текущеё фигуры и следуйщей
     color, next_color = colors(), colors()
 
 
@@ -39,13 +40,15 @@ class Collision:
 
     def __init__(self):
         self.parameter = Parameter()
+        #Заполнение игрового поля нулями для проверки.
         self.flor = [[0 for i in range(W)] for j in range(H)]
 
+    #логика границ для движений фигур
     def collision(self, i):
 
-        if self.parameter.figure[i].x < 0 or self.parameter.figure[i].x > W - 1:
+        if self.parameter.figure[i].x < 0 or self.parameter.figure[i].x > 9:
             return False
-        elif self.parameter.figure[i].y > H - 1 or self.flor[self.parameter.figure[i].y][self.parameter.figure[i].x]:
+        elif self.parameter.figure[i].y > 19 or self.flor[self.parameter.figure[i].y][self.parameter.figure[i].x]:
             return False
         return True
 
@@ -75,9 +78,9 @@ class Function(Parameter):
                     break
 
     def del_line(self):
-        line = H - 1
+        line = 19
         Parameter.lines = 0
-        for row in range(H - 1, - 1, - 1):
+        for row in range(19, - 1, - 1):
             count = 0
             for i in range(W):
                 if self.collision.flor[row][i]:
@@ -126,11 +129,13 @@ class Function(Parameter):
                     pg.draw.rect(screen, col, Parameter.figure_rect)
 
     def get_record(self):
+
         try:
-            with open('record') as f:
+            with open('Record') as f:
                 return f.readline()
-        except FileNotFoundError:
-            with open('record', 'w') as f:
+        #исключение
+        except FileNotFoundError: #файл или директория не существует.
+            with open('Record', 'w') as f:
                 f.write('0')
 
     def set_record(self):
@@ -155,6 +160,7 @@ class Draw:
         self.collision = Collision()
 
     def draw_figure(self):
+        #Цикл отрисовки фигур
         for i in range(4):
             self.parameter.figure_rect.x = self.parameter.figure[i].x * BLOCK
             self.parameter.figure_rect.y = self.parameter.figure[i].y * BLOCK
@@ -167,7 +173,8 @@ class Draw:
             pg.draw.rect(screen, self.parameter.next_color, self.parameter.figure_rect)
 
     def Grid(self):
-        [pg.draw.rect(screen, (pg.Color('white')), i_rect, 1) for i_rect in self.parameter.grid]
+        for i in self.parameter.grid:
+            pg.draw.rect(screen, (pg.Color('white')), i, 1)
 
     def draw_score(self):
         screen.blit(title_score, (550, 140))

@@ -15,24 +15,24 @@ title_record = font.render("Record:", True, pg.Color("green"))
 
 
 class Parameter:
-    #кординаты фигур на игровом поле:
+    # кординаты фигур на игровом поле:
     figure_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)], [(0, 0), (-1, 0), (1, 0), (0, -1)], [(0, 0), (1, -1), (0, -1), (0, 1)],
                   [(0, 0), (-1, -1), (0, -1), (0, 1)], [(0, 0), (-1, 0), (1, -1), (0, -1)], [(0, 0), (1, -1), (0, -1), (1, 0)],
                   [(0, 0), (1, 0), (0, -1), (-1, -1)]]
-    #сложная конструкция генератора масива списка фигур экземпляра Rect:
+    # сложная конструкция генератора масива списка фигур экземпляра Rect:
     figures = [[pg.Rect(x + W // 2, y + 1, 1, 1) for x, y in pos] for pos in figure_pos]
-    #Ещё один экземпляр для отрисовки каждой части фигуры
+    # Ещё один экземпляр для отрисовки каждой части фигуры
     figure_rect = pg.Rect(1, 1, BLOCK - 2, BLOCK - 2)
     # переменые хранящие текущую и следущею фигуру
     figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
     score = 0
     lines = 0
     scores = {0: 0, 1: 10, 2: 30, 3: 60, 4: 100}
-    #сложная конструкция генератора списка сетки(блоков):
+    # сложная конструкция генератора списка сетки(блоков):
     grid = [pg.Rect(x * BLOCK, y * BLOCK, BLOCK, BLOCK) for x in range(W) for y in range(H)]
-    #Выбор рандомного цвета в системе RGB с помощью lambda
+    # Выбор рандомного цвета в системе RGB с помощью lambda
     colors = lambda: (randrange(200, 255), randrange(200, 255), randrange(200, 255))
-    #Цвет для текущеё фигуры и следуйщей
+    # Цвет для текущеё фигуры и следуйщей
     color, next_color = colors(), colors()
 
 
@@ -40,10 +40,10 @@ class Collision:
 
     def __init__(self):
         self.parameter = Parameter()
-        #Заполнение игрового поля нулями для проверки.
+        # Заполнение игрового поля нулями для проверки.
         self.flor = [[0 for i in range(W)] for j in range(H)]
 
-    #логика границ для движений фигур
+    # логика границ для движений фигур
     def collision(self, i):
 
         if self.parameter.figure[i].x < 0 or self.parameter.figure[i].x > 9:
@@ -129,12 +129,12 @@ class Function(Parameter):
                     pg.draw.rect(screen, col, Parameter.figure_rect)
 
     def get_record(self):
-
+        # исключение
         try:
             with open('Record') as f:
                 return f.readline()
-        #исключение
-        except FileNotFoundError: #файл или директория не существует.
+
+        except FileNotFoundError: # Файл или директория не существует.
             with open('Record', 'w') as f:
                 f.write('0')
 
@@ -148,7 +148,7 @@ class Function(Parameter):
         for i in range(W):
             if self.collision.flor[0][i]:
                 self.set_record()
-                self.collision.flor = [[0 for i in range(W)] for i in range(H)]
+                self.collision.flor = [[0 for i in range(W)] for j in range(H)]
                 self.anim_count, self.anim_speed, self.anim_limit = 0, 60, 2000
                 Parameter.score = 0
 
@@ -160,7 +160,7 @@ class Draw:
         self.collision = Collision()
 
     def draw_figure(self):
-        #Цикл отрисовки фигур
+        # Цикл отрисовки фигур
         for i in range(4):
             self.parameter.figure_rect.x = self.parameter.figure[i].x * BLOCK
             self.parameter.figure_rect.y = self.parameter.figure[i].y * BLOCK

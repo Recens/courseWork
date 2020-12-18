@@ -1,6 +1,7 @@
 import pygame as pg
 from copy import deepcopy
-from random import choice, randrange
+from random import choice
+from random import randrange
 pg.init()
 W, H = 10, 20
 BLOCK = 50
@@ -78,6 +79,7 @@ class Function(Parameter):
                     break
 
     def del_line(self):
+        coun = 0
         line = 19
         Parameter.lines = 0
         for row in range(19, - 1, - 1):
@@ -88,8 +90,11 @@ class Function(Parameter):
                 self.collision.flor[line][i] = self.collision.flor[row][i]
             if count < W:
                 line -= 1
+                coun += 1
+            elif coun == 5:
+                self.fall_speed += 2
+                coun = 0
             else:
-                self.fall_speed += 1
                 Parameter.lines += 1
 
     def score(self):
@@ -192,7 +197,7 @@ class GameWindow:
         self.draw = Draw()
 
     def mainLoop(self):
-        pg.init()
+
         clock = pg.time.Clock()
         while True:
 

@@ -17,13 +17,13 @@ title_record = font.render("Record:", True, pg.Color("green"))
 
 class Parameter:
     # кординаты фигур на игровом поле:
-    figure_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)], [(0, 0), (-1, 0), (1, 0), (0, -1)], [(0, 0), (1, -1), (0, -1), (0, 1)],
-                  [(0, 0), (-1, -1), (0, -1), (0, 1)], [(0, 0), (-1, 0), (1, -1), (0, -1)], [(0, 0), (1, -1), (0, -1), (1, 0)],
-                  [(0, 0), (1, 0), (0, -1), (-1, -1)]]
+    figure_xy = [[(-1, 0), (-2, 0), (0, 0), (1, 0)], [(0, 0), (-1, 0), (1, 0), (0, -1)], [(0, 0), (1, -1), (0, -1), (0, 1)],
+                 [(0, 0), (-1, -1), (0, -1), (0, 1)], [(0, 0), (-1, 0), (1, -1), (0, -1)], [(0, 0), (1, -1), (0, -1), (1, 0)],
+                 [(0, 0), (1, 0), (0, -1), (-1, -1)]]
     # сложная конструкция генератора масива списка фигур экземпляра Rect:
-    figures = [[pg.Rect(x + W // 2, y + 1, 1, 1) for x, y in pos] for pos in figure_pos]
+    figures = [[pg.Rect(x + W // 2, y + 1, 1, 1) for x, y in pos] for pos in figure_xy]
     # Ещё один экземпляр для отрисовки каждой части фигуры
-    figure_rect = pg.Rect(1, 1, BLOCK - 2, BLOCK - 2)
+    figureRect = pg.Rect(0, 0, BLOCK - 2, BLOCK - 2)
     # переменые хранящие текущую и следущею фигуру
     figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
     score = 0
@@ -63,7 +63,7 @@ class Function(Parameter):
         self.fall_speed = 40
         self.fall_limit = 200
         self.rotate = False
-        self.record = 0
+
 
     def move_rotation(self):
         center = Parameter.figure[0]
@@ -129,9 +129,9 @@ class Function(Parameter):
         for y, row in enumerate(self.collision.flor): # перебор листа по индексу элемента и самого элемента
             for x, col in enumerate(row):
                 if col:
-                    Parameter.figure_rect.x = x * BLOCK
-                    Parameter.figure_rect.y = y * BLOCK
-                    pg.draw.rect(screen, col, Parameter.figure_rect)
+                    Parameter.figureRect.x = x * BLOCK
+                    Parameter.figureRect.y = y * BLOCK
+                    pg.draw.rect(screen, col, Parameter.figureRect)
 
     def get_record(self):
         # исключение
@@ -167,15 +167,15 @@ class Draw:
     def draw_figure(self):
         # Цикл отрисовки фигур
         for i in range(4):
-            self.parameter.figure_rect.x = self.parameter.figure[i].x * BLOCK
-            self.parameter.figure_rect.y = self.parameter.figure[i].y * BLOCK
-            pg.draw.rect(screen, self.parameter.color, self.parameter.figure_rect)
+            self.parameter.figureRect.x = self.parameter.figure[i].x * BLOCK
+            self.parameter.figureRect.y = self.parameter.figure[i].y * BLOCK
+            pg.draw.rect(screen, self.parameter.color, self.parameter.figureRect)
 
     def draw_next_figure(self):
         for i in range(4):
-            self.parameter.figure_rect.x = self.parameter.next_figure[i].x * BLOCK + 500
-            self.parameter.figure_rect.y = self.parameter.next_figure[i].y * BLOCK + 500
-            pg.draw.rect(screen, self.parameter.next_color, self.parameter.figure_rect)
+            self.parameter.figureRect.x = self.parameter.next_figure[i].x * BLOCK + 500
+            self.parameter.figureRect.y = self.parameter.next_figure[i].y * BLOCK + 500
+            pg.draw.rect(screen, self.parameter.next_color, self.parameter.figureRect)
 
     def Grid(self):
         for i in self.parameter.grid:

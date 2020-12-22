@@ -3,10 +3,11 @@ from copy import deepcopy
 from random import choice
 from random import randrange
 pg.init()
+FPS = 120
 W, H = 10, 20
 BLOCK = 50
 size = 1000, 1000
-FPS = 120
+
 screen = pg.display.set_mode(size)
 pg.display.set_caption("TETRIS")
 font = pg.font.SysFont('cambria', 45)
